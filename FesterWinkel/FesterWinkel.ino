@@ -23,25 +23,31 @@ void setup(){
   digitalWrite(PIN_LED1, LOW);
   digitalWrite(PIN_LED2, LOW);
 
-  
+  //Interrupt für den PIN
   attachInterrupt(digitalPinToInterrupt(PIN_ZC_INT), RisingEdgeDetected, RISING)
 }
 
+// Nulldurchgang erkennen
 bool Nulldurchgang = false;
+int Nullzeit = 0;
+
 void RisingEdgeDetected(){
   Nulldurchgang = true;
 }
 
-float Zündwinkel = 90.0;
+
+float Zuendwinkel = 90.0;
 float Periodendauer = 20.0;
 
+
 void loop(){
-  if(Nulldurchgang){
-    digitalWrite(PIN_TRIAC, LOW);
-    delay(Zündwinkel/360.0 * Periodendauer); // /360 * Periodendauer --> /360 entspricht prozentuellen Anteil der periodendauer * Periodendauer
-    digitalWrite(PIN_TRIAC, HIGH);
-    delayMicroseconds(10) // Nur kurz anmachen, damit der TRIAC einrasten kann
-    digitalWrite(PIN_TRIAC, LOW);
+  // speichere Zeit des Nulldurchgangs
+  if(Nulldurchgang) {
+    Nullzeit = millis();
     Nulldurchgang = false;
+  }
+  if(millis()-Nullzeit >= Zuendwinkel/360.0 * Periodendauer){
+
+
   }
 }
