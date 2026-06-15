@@ -24,7 +24,7 @@ void setup(){
   digitalWrite(PIN_LED2, LOW);
 
   //Interrupt für den PIN
-  attachInterrupt(digitalPinToInterrupt(PIN_ZC_INT), RisingEdgeDetected, RISING)
+  attachInterrupt(digitalPinToInterrupt(PIN_ZC_INT), RisingEdgeDetected, RISING);
 }
 
 // Nulldurchgang erkennen
@@ -39,15 +39,23 @@ void RisingEdgeDetected(){
 float Zuendwinkel = 90.0;
 float Periodendauer = 20.0;
 
+// Ob Diese Periode aktiviert wurde
+bool activated = false;
+
 
 void loop(){
+
   // speichere Zeit des Nulldurchgangs
   if(Nulldurchgang) {
     Nullzeit = millis();
     Nulldurchgang = false;
+    activated = false;
   }
-  if(millis()-Nullzeit >= Zuendwinkel/360.0 * Periodendauer){
-
-
+  // Wenn seit dem letzten nulldurchgang Zuendwinkel/360 % der periodendauer vergangen sind und diese Periode noch nicth aktiviert wurde:
+  if(millis()-Nullzeit >= Zuendwinkel/360.0 * Periodendauer && !activated){
+    digitalWrite(PIN_TRIAC, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(PIN_TRIAC, LOW);
+    activated = true;
   }
 }
