@@ -25,27 +25,14 @@ void setup(){
 
 }
 
-int pressTime1 = 0;
-int pressTime2 = 0;
 
 void loop(){
   
   if(digitalRead(PIN_TASTER1) == 1){
-    digitalWrite(PIN_LED1, HIGH);
-    pressTime1 = millis();
+    digitalWrite(PIN_TRIAC, HIGH);
   }
-
-  if(digitalRead(PIN_TASTER2) == 2){
-    digitalWrite(PIN_LED2, HIGH);
-    pressTime2 = millis();
-  }
-
-  if(millis()-pressTime1 > 1000){
-    digitalWrite(PIN_LED1, LOW);
-  }
-
-  if(millis()-pressTime2 > 1000){
-    digitalWrite(PIN_LED2, LOW);
+  if(digitalRead(PIN_TASTER2) == 1){
+    digitalWrite(PIN_TRIAC, LOW);
   }
 
 }
