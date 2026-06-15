@@ -1,6 +1,6 @@
 
 #include <Arduino.h>
-
+//TODO Zeiten zu unsinged long
 
 // Pins initialisieren
 const int PIN_TASTER1     = 0;
@@ -28,7 +28,7 @@ void setup(){
 }
 
 // Nulldurchgang erkennen
-bool Nulldurchgang = false;
+volatile bool Nulldurchgang = false;
 int Nullzeit = 0;
 
 int lastpress = 0; // zeit des letzten knopfdrucks
