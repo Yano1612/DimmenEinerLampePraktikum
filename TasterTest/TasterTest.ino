@@ -1,4 +1,3 @@
-
 #include <Arduino.h>
 
 
@@ -27,7 +26,7 @@ void setup(){
 
 
 void loop(){
-  
+
   if(digitalRead(PIN_TASTER1) == 1){
     digitalWrite(PIN_TRIAC, HIGH);
   }
