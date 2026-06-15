@@ -31,6 +31,8 @@ void setup(){
 bool Nulldurchgang = false;
 int Nullzeit = 0;
 
+int lastpress = 0; // zeit des letzten knopfdrucks
+
 void RisingEdgeDetected(){
   Nulldurchgang = true;
 }
@@ -58,6 +60,14 @@ void loop(){
     activated = true;
   }
 
-  if (true){}
+                                    // Sichern, dass ein Press nicht mehrmals registriert wird
+  if (digitalRead(PIN_TASTER2) == 1 && millis()- lastpress > 50){
+    Zuendwinkel += 5.0;
+    lastpress = millis();
+  }
+  if (digitalRead(PIN_TASTER1) == 1 && millis()- lastpress > 50){
+    Zuendwinkel -= 5.0;
+    lastpress = millis();
+  }
 
 }
