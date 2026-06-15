@@ -44,7 +44,6 @@ bool activated = false;
 
 
 void loop(){
-
   // speichere Zeit des Nulldurchgangs
   if(Nulldurchgang) {
     Nullzeit = millis();
@@ -58,4 +57,7 @@ void loop(){
     digitalWrite(PIN_TRIAC, LOW);
     activated = true;
   }
+
+  if (true){}
+
 }
