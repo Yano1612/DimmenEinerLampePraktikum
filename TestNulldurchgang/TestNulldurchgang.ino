@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+volatile bool Nulldurchgang = false;
 
 // Pins definieren
 const int PIN_TASTER1     = 0;
@@ -28,12 +29,18 @@ void setup(){
 }
 
 void RisingEdgeDetected(){
-  digitalWrite(PIN_TRIAC, HIGH);
-  // zwei Millisekunden aber in DelayMicroseconds, da das keinen Counter braucht --> Fehler von bis zu 4% möglich, hier aber nicht relevant
-  delayMicroseconds(2000)
-  digitalWrite(PIN_TRIAC, LOW);
+  Nulldurchgang = true;
 }
 
 
 void loop(){
+  if (Nulldurchgang){
+    digitalWrite(PIN_TRIAC, LOW);
+    delayMicroseconds(5000); // Enstpricht einer Viertelperiode --> Einem Halben "Buckel" (50Hz --> 20ms Periodendauer --> 5 ms)
+    digitalWrite(PIN_TRIAC, HIGH);
+    delayMicroseconds(5000); 
+    digitalWrite(PIN_TRIAC, LOW); // Bevor der Nächste Nulldurchgang kommt wird das Gate wieder ausgeschalten --> Um Timingproblemen Vorzubeugen (ehe das gate durch den Nächsten nulldurchgang ausgeschalten wird wurde der haltestrom wieder überschritten)
+    Nulldurchgang = false;
+  }
+  
 }
