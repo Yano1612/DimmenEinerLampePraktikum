@@ -44,16 +44,21 @@ float Periodendauer = 20000.0; // 50 hz in Microsekunden
 // Ob Diese Periode aktiviert wurde
 bool activated = false;
 
+//Fürs Blinken
+bool blink = true;
+int durchgaenge = 0;
+int lampeAn = 1;
 
 void loop(){
   // speichere Zeit des Nulldurchgangs
   if(Nulldurchgang) {
     Nullzeit = micros();
+    durchgaenge++;
     Nulldurchgang = false;
     activated = false;
   }
                                 
-  if(micros()-Nullzeit>= Zuendwinkel/360.0 * Periodendauer && !activated){ // Wenn seit dem letzten nulldurchgang Zuendwinkel/360 % der periodendauer vergangen sind und diese Periode noch nicth aktiviert wurde:
+  if(micros()-Nullzeit>= Zuendwinkel/360.0 * Periodendauer && !activated && lampeAn == 1){ // Wenn seit dem letzten nulldurchgang Zuendwinkel/360 % der periodendauer vergangen sind und diese Periode noch nicth aktiviert wurde:
     digitalWrite(PIN_TRIAC, HIGH);
     delayMicroseconds(10);
     digitalWrite(PIN_TRIAC, LOW);
@@ -72,5 +77,13 @@ void loop(){
       Zuendwinkel -= 5.0;
     }
     lastpress = millis();
+  }
+
+  if(blink){
+
+    if(durchgaenge >= 100){
+      lampeAn = (lampeAn+1)%2;
+      durchgaenge = 0;
+    }  
   }
 }
