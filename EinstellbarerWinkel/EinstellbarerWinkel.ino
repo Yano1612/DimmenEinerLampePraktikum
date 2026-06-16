@@ -1,6 +1,6 @@
 
 #include <Arduino.h>
-//TODO Zeiten zu unsinged long
+//TODO Zeiten zu unsinged long, Maximal und minimalwert richtig legen (maybe 5° bis 35°)
 
 // Pins initialisieren
 const int PIN_TASTER1     = 0;
@@ -39,7 +39,7 @@ void RisingEdgeDetected(){
 
 
 float Zuendwinkel = 90.0;
-float Periodendauer = 20.0;
+float Periodendauer = 20000.0; // 50 hz in Microsekunden
 
 // Ob Diese Periode aktiviert wurde
 bool activated = false;
@@ -48,12 +48,12 @@ bool activated = false;
 void loop(){
   // speichere Zeit des Nulldurchgangs
   if(Nulldurchgang) {
-    Nullzeit = millis();
+    Nullzeit = micros();
     Nulldurchgang = false;
     activated = false;
   }
-  // Wenn seit dem letzten nulldurchgang Zuendwinkel/360 % der periodendauer vergangen sind und diese Periode noch nicth aktiviert wurde:
-  if(millis()-Nullzeit >= Zuendwinkel/360.0 * Periodendauer && !activated){
+                                
+  if(micros()-Nullzeit>= Zuendwinkel/360.0 * Periodendauer && !activated){ // Wenn seit dem letzten nulldurchgang Zuendwinkel/360 % der periodendauer vergangen sind und diese Periode noch nicth aktiviert wurde:
     digitalWrite(PIN_TRIAC, HIGH);
     delayMicroseconds(10);
     digitalWrite(PIN_TRIAC, LOW);
@@ -73,5 +73,4 @@ void loop(){
     }
     lastpress = millis();
   }
-
 }
