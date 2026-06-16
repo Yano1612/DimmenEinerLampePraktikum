@@ -1,6 +1,5 @@
 
 #include <Arduino.h>
-//TODO Zeiten zu unsinged long, Maximal und minimalwert richtig legen (maybe 5° bis 35°)
 
 // Pins initialisieren
 const int PIN_TASTER1     = 0;
@@ -29,10 +28,11 @@ void setup(){
 
 // Nulldurchgang erkennen
 volatile bool Nulldurchgang = false;
-int Nullzeit = 0;
+unsigned long Nullzeit = 0;
 
-int lastpress = 0; // zeit des letzten knopfdrucks
+unsigned long lastpress = 0; // zeit des letzten knopfdrucks
 
+// Interrupt handler
 void RisingEdgeDetected(){
   Nulldurchgang = true;
 }
@@ -41,7 +41,7 @@ void RisingEdgeDetected(){
 float Zuendwinkel = 90.0;
 float Periodendauer = 20000.0; // 50 hz in Microsekunden
 
-// Ob Diese Periode aktiviert wurde
+// Ob Diese Periode bereits der Triac gezündet wurde
 bool activated = false;
 
 //Fürs Blinken
@@ -53,18 +53,27 @@ void loop(){
   // speichere Zeit des Nulldurchgangs
   if(Nulldurchgang) {
     Nullzeit = micros();
-    durchgaenge++;
+    if (blink){
+      durchgaenge++; // Ein neuer durchgang erkannt
+    }
     Nulldurchgang = false;
     activated = false;
   }
-                                
+
+  
+
+  // warte zündwinkel ab und Zünde dann                              
   if(micros()-Nullzeit>= Zuendwinkel/360.0 * Periodendauer && !activated && lampeAn == 1){ // Wenn seit dem letzten nulldurchgang Zuendwinkel/360 % der periodendauer vergangen sind und diese Periode noch nicth aktiviert wurde:
+    // Zündung
     digitalWrite(PIN_TRIAC, HIGH);
     delayMicroseconds(10);
     digitalWrite(PIN_TRIAC, LOW);
+    // Verhindern des doppelten Zündens innerhalb einer Halbwelle
     activated = true;
   }
 
+
+  // Zündwinkel mit Taster steuern
                                     // Sichern, dass ein Press nicht mehrmals registriert wird
   if (digitalRead(PIN_TASTER2) == 1 && millis()- lastpress > 50){
     if (Zuendwinkel < 175){ // Maximalwert
@@ -79,9 +88,13 @@ void loop(){
     lastpress = millis();
   }
 
-  if(blink){
 
+
+  // Steuere das Blinken
+  if(blink){
+    // alle 50 Perioden einmal den zustand (an / aus) der Lampe wechseln --> triac zündet nur wenn lampeAn == 1 ist
     if(durchgaenge >= 100){
+      // Wechseln des Wertes
       lampeAn = (lampeAn+1)%2;
       durchgaenge = 0;
     }  
