@@ -75,13 +75,13 @@ void loop(){
 
   // Zündwinkel mit Taster steuern
                                     // Sichern, dass ein Press nicht mehrmals registriert wird
-  if (digitalRead(PIN_TASTER2) == 1 && millis()- lastpress > 50){
+  if (digitalRead(PIN_TASTER2) == 1 && millis()- lastpress > 500){
     if (Zuendwinkel < 175){ // Maximalwert
       Zuendwinkel += 5.0;
     }
     lastpress = millis();
   }
-  if (digitalRead(PIN_TASTER1) == 1 && millis()- lastpress > 50){
+  if (digitalRead(PIN_TASTER1) == 1 && millis()- lastpress > 500){
     if (Zuendwinkel > 5){ // Minimalwert
       Zuendwinkel -= 5.0;
     }
