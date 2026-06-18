@@ -10,6 +10,27 @@ const int PIN_LED1        = 14;
 const int PIN_LED2        = 15;
 
 
+
+
+float Zuendwinkel = 90.0;
+float Periodendauer = 20000.0; // 50 hz in Microsekunden
+
+// Ob Diese Periode aktiviert wurde
+bool activated = false;
+
+
+// Nulldurchgang erkennen
+volatile bool Nulldurchgang = false;
+int Nullzeit = 0;
+
+int lastpress = 0; // zeit des letzten knopfdrucks
+
+
+
+void RisingEdgeDetected(){
+  Nulldurchgang = true;
+}
+
 void setup(){
   // Pins konfigurieren
   pinMode(PIN_TASTER1, INPUT);
@@ -25,29 +46,6 @@ void setup(){
   //Interrupt für den PIN
   attachInterrupt(digitalPinToInterrupt(PIN_ZC_INT), RisingEdgeDetected, RISING);
 }
-
-// Nulldurchgang erkennen
-volatile bool Nulldurchgang = false;
-unsigned long Nullzeit = 0;
-
-unsigned long lastpress = 0; // zeit des letzten knopfdrucks
-
-// Interrupt handler
-void RisingEdgeDetected(){
-  Nulldurchgang = true;
-}
-
-
-float Zuendwinkel = 90.0;
-float Periodendauer = 20000.0; // 50 hz in Microsekunden
-
-// Ob Diese Periode bereits der Triac gezündet wurde
-bool activated = false;
-
-//Fürs Blinken
-bool blink = true;
-int durchgaenge = 0;
-int lampeAn = 1;
 
 void loop(){
   // speichere Zeit des Nulldurchgangs
