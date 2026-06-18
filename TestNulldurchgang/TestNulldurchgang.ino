@@ -24,7 +24,7 @@ void setup(){
   digitalWrite(PIN_LED1, LOW);
   digitalWrite(PIN_LED2, LOW);
 
-  attachInterrupt(digitalPinToInterrupt(PIN_ZC_INT), RisingEdgeDetected, RISING)
+  attachInterrupt(digitalPinToInterrupt(PIN_ZC_INT), RisingEdgeDetected, RISING);
 
 }
 
@@ -32,15 +32,26 @@ void RisingEdgeDetected(){
   Nulldurchgang = true;
 }
 
+int durchgaenge = 0;
+int lampeAn = 0;
 
 void loop(){
-  if (Nulldurchgang){
-    digitalWrite(PIN_TRIAC, LOW);
-    delayMicroseconds(5000); // Enstpricht einer Viertelperiode --> Einem Halben "Buckel" (50Hz --> 20ms Periodendauer --> 5 ms)
-    digitalWrite(PIN_TRIAC, HIGH);
-    delayMicroseconds(5000); 
-    digitalWrite(PIN_TRIAC, LOW); // Bevor der Nächste Nulldurchgang kommt wird das Gate wieder ausgeschalten --> Um Timingproblemen Vorzubeugen (ehe das gate durch den Nächsten nulldurchgang ausgeschalten wird wurde der haltestrom wieder überschritten)
+  if (Nulldurchgang){ 
+    durchgaenge++;
     Nulldurchgang = false;
   }
+
+  if(lampeAn == 1){
+    // Zünde
+    digitalWrite(PIN_TRIAC, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(PIN_TRIAC, LOW));
+  }
+  
+  if(durchgaenge >= 100){
+    lampeAn = (lampeAn+1)%2;
+    durchgaenge = 0;
+  }  
+  
   
 }

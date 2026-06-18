@@ -1,1 +1,1 @@
-Hier Sind die Aufgaben jeweils als Einzelne Programme Realisiert und nicht als Branches eines Hauptprogrammes
+TODO --> Teste Programm vollständig bevor es in main gemerget werden kann
