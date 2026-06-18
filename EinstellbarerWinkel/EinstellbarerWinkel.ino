@@ -21,9 +21,9 @@ bool activated = false;
 
 // Nulldurchgang erkennen
 volatile bool Nulldurchgang = false;
-int Nullzeit = 0;
+unsigned long Nullzeit = 0;
 
-int lastpress = 0; // zeit des letzten knopfdrucks
+unsigned long lastpress = 0; // zeit des letzten knopfdrucks
 
 
 
