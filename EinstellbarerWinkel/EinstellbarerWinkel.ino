@@ -25,6 +25,9 @@ unsigned long Nullzeit = 0;
 
 unsigned long lastpress = 0; // zeit des letzten knopfdrucks
 
+bool blink = true;
+int durchgaenge = 0;
+int lampeAn = 1;
 
 
 void RisingEdgeDetected(){
